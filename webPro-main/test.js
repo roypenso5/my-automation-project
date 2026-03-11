@@ -3,7 +3,10 @@ const puppeteer = require('puppeteer');
 describe('הבדיקה הראשונה שלי', () => {
   it('פותח אתר ובודק את הכותרת שלו', async () => {
     // פותח דפדפן כסמוי
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+  headless: "new",
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
     const page = await browser.newPage();
 
     // גולש לאתר דוגמה
