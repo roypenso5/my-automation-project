@@ -2,11 +2,13 @@ const puppeteer = require('puppeteer');
 
 describe('הבדיקה הראשונה שלי', () => {
   it('פותח אתר ובודק את הכותרת שלו', async () => {
-    // פותח דפדפן כסמוי
+    // פותח דפדפן עם הגדרות שמתאימות ל-GitHub Actions
     const browser = await puppeteer.launch({
-  headless: "new",
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
-});
+      headless: true, // שינינו ל-true לביצועים טובים יותר בשרת
+      executablePath: '/usr/bin/google-chrome', // שימוש בדפדפן הקיים בשרת
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
     const page = await browser.newPage();
 
     // גולש לאתר דוגמה
@@ -18,7 +20,7 @@ describe('הבדיקה הראשונה שלי', () => {
     // מוודא שהכותרת היא מה שציפינו
     expect(title).toBe('Example Domain'); 
 
-    // סוגר את הדפדפן
+    // חשוב מאוד לסגור את הדפדפן בסיום
     await browser.close();
   });
 });
