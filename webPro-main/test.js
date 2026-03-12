@@ -1,26 +1,29 @@
 const puppeteer = require('puppeteer');
 
 describe('הבדיקה הראשונה שלי', () => {
-  it('פותח אתר ובודק את הכותרת שלו', async () => {
-    // פותח דפדפן עם הגדרות שמתאימות ל-GitHub Actions
+  it('פותח אתר, לוכד צילום מסך ובודק את הכותרת שלו', async () => {
+    // הגדרות מיוחדות לריצה בתוך GitHub Actions
     const browser = await puppeteer.launch({
-      headless: true, // שינינו ל-true לביצועים טובים יותר בשרת
-      executablePath: '/usr/bin/google-chrome', // שימוש בדפדפן הקיים בשרת
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      headless: true, // ריצה במצב 'headless' (ללא מסך גלוי) חיונית לשרת
+      executablePath: '/usr/bin/google-chrome', // הנתיב לדפדפן בשרת של GitHub
+      args: ['--no-sandbox', '--disable-setuid-sandbox'] // הגדרות אבטחה חיוניות לריצה בשרת
     });
     
     const page = await browser.newPage();
 
-    // גולש לאתר דוגמה
+    // גלישה לאתר הבדיקה
     await page.goto('https://example.com');
 
-    // מושך את הכותרת של האתר
+    // **המשימה החדשה:** לכידת צילום מסך ושמירתו כקובץ 'screenshot.png'
+    await page.screenshot({ path: 'screenshot.png' });
+
+    // משיכת הכותרת
     const title = await page.title();
 
-    // מוודא שהכותרת היא מה שציפינו
+    // בדיקה שהכותרת נכונה
     expect(title).toBe('Example Domain'); 
 
-    // חשוב מאוד לסגור את הדפדפן בסיום
+    // סגירת הדפדפן
     await browser.close();
   });
 });
