@@ -1,22 +1,24 @@
 name: הבדיקות שלי
 
-on: [push] # הרובוט יופעל בכל פעם שתעלה קוד
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: הכנת סביבת עבודה
+      - name: Node setup
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: 18
 
-      - name: התקנת כלים
+      - name: Install dependencies
         run: npm install
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
 
-      - name: הרצת הבדיקה
+      - name: Install Chromium
+        run: sudo apt-get install -y chromium-browser
+
+      - name: Run tests
         run: npm test
