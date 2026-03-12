@@ -1,29 +1,25 @@
-const puppeteer = require('puppeteer');
+name: הבדיקות שלי
 
-describe('הבדיקה הראשונה שלי', () => {
-  it('פותח אתר, לוכד צילום מסך ובודק את הכותרת שלו', async () => {
-    // הגדרות מיוחדות לריצה בתוך GitHub Actions
-    const browser = await puppeteer.launch({
-      headless: true, // ריצה במצב 'headless' (ללא מסך גלוי) חיונית לשרת
-      executablePath: '/usr/bin/google-chrome', // הנתיב לדפדפן בשרת של GitHub
-      args: ['--no-sandbox', '--disable-setuid-sandbox'] // הגדרות אבטחה חיוניות לריצה בשרת
-    });
-    
-    const page = await browser.newPage();
+on: [push]
 
-    // גלישה לאתר הבדיקה
-    await page.goto('https://example.com');
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    // **המשימה החדשה:** לכידת צילום מסך ושמירתו כקובץ 'screenshot.png'
-    await page.screenshot({ path: 'screenshot.png' });
+    steps:
+      - uses: actions/checkout@v3
 
-    // משיכת הכותרת
-    const title = await page.title();
+      - name: Node setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    // בדיקה שהכותרת נכונה
-    expect(title).toBe('Example Domain'); 
+      - name: Install dependencies
+        # הוספנו פקודה שדילגת על הורדת כרום בזמן התקנת הספריות
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
 
-    // סגירת הדפדפן
-    await browser.close();
-  });
-});
+      - name: Run tests
+        # עכשיו הוא פשוט יריץ את הבדיקה (הוא ישתמש בדפדפן המובנה של השרת)
+        run: npm test

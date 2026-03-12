@@ -15,10 +15,11 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Install Chromium
-        run: sudo apt-get install -y chromium-browser
+        # הוספנו פקודה שדילגת על הורדת כרום בזמן התקנת הספריות
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
 
       - name: Run tests
+        # עכשיו הוא פשוט יריץ את הבדיקה (הוא ישתמש בדפדפן המובנה של השרת)
         run: npm test
