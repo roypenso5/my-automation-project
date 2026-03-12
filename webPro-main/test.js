@@ -1,25 +1,22 @@
-name: הבדיקות שלי
+const puppeteer = require('puppeteer');
 
-on: [push]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Node setup
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        # הוספנו פקודה שדילגת על הורדת כרום בזמן התקנת הספריות
-        run: npm ci
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
-
-      - name: Run tests
-        # עכשיו הוא פשוט יריץ את הבדיקה (הוא ישתמש בדפדפן המובנה של השרת)
-        run: npm test
+describe('Automation Test', () => {
+  it('Should verify page title and take screenshot', async () => {
+    const browser = await puppeteer.launch({
+      headless: true,
+      executablePath: '/usr/bin/google-chrome',
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
+    const page = await browser.newPage();
+    await page.goto('https://example.com');
+    
+    // לקיחת צילום מסך עבור המשימה השנייה
+    await page.screenshot({ path: 'screenshot.png' });
+    
+    const title = await page.title();
+    expect(title).toBe('Example Domain'); 
+    
+    await browser.close();
+  });
+});
